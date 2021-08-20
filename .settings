@@ -1,0 +1,3 @@
+SERVER_PORT=6666
+MIDI_NAME="mntd"
+CLIENT_BASE_DIR="./client"
