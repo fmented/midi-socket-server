@@ -1,3 +1,4 @@
-SERVER_PORT=6666
+SERVER_PORT=5050
 MIDI_NAME="mntd"
-CLIENT_BASE_DIR="./client"
+CLIENT_BASE_DIR="../midi-socket-layout/public"
+SHOW_QR=1

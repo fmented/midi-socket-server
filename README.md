@@ -58,8 +58,9 @@ SECRET_KEY="add your secret key here"
 <hr>
 
 ## Start
-to start the server type
+to start the server run
 ```bash
 python main.py
 ```
 it will show a qrcode that can be scanned by other device that is in the same network to act as a MIDI contoller
+if you find the qrcode is annoying, you can turn it off in ***.settings*** in **SHOW_QR** variable 

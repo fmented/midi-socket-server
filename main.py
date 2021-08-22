@@ -1,6 +1,5 @@
 import os
 import socket
-import sys
 from flask import Flask, send_from_directory
 from flask_socketio import SocketIO
 from rtmidi import midiconstants as midi
@@ -21,23 +20,20 @@ midi_ports = device.get_ports()
 try:
     device.open_virtual_port(settings['MIDI_NAME'])
 except NotImplementedError:
-    name = list(filter(lambda n: n.startswith(settings['MIDI_NAME']), midi_ports))[0]
-    num = midi_ports.index(name)
-    device.open_port(num)
+    try:
+        name = list(filter(lambda n: n.startswith(settings['MIDI_NAME']), midi_ports))[0]
+        num = midi_ports.index(name)
+        device.open_port(num)
+    except IndexError:
+        exit("Please run loopMIDI first")
+    
     
 
 io = SocketIO(app)
 
 ip = socket.gethostbyname(socket.gethostname())
 port = settings['SERVER_PORT']
-url = 'http://{}:{}/'.format(ip, port)
-qrCode = qrcode.make(url)
 
-try:
-    qrCode.save("url.png")
-except OSError:
-    os.remove("url.png")
-    qrCode.save("url.png")
 
 @io.on('note_on')
 def send_note_on(data):
@@ -68,6 +64,14 @@ def home(path):
     return send_from_directory(settings['CLIENT_BASE_DIR'], path)
 
 if __name__ == "__main__":
+    if settings['CLIENT_BASE_DIR'] == 1:
+        url = 'http://{}:{}/'.format(ip, port)
+        qrCode = qrcode.make(url)
+        try:
+            qrCode.save("url.png")
+        except OSError:
+            os.remove("url.png")
+            qrCode.save("url.png")
+        webbrowser.open_new("url.png")
 
-    webbrowser.open("url.png")
     io.run(app, host=ip, port=port)
